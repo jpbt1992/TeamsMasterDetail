@@ -1,0 +1,82 @@
+﻿@using TeamsMasterDetail.Domain.Entities;
+@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+
+@model MasterDetailViewModel
+
+<h1>Times List</h1>
+
+<form method="post">
+    <input type="submit"
+           value="Insert Time"
+           asp-controller="@typeof(TeamController).GetControllerName()"
+           asp-action="@nameof(TeamController.InsertEntry)" />
+
+    <br />
+    <br />
+
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>@nameof(Team.TeamId)</th>
+                <th>@nameof(Team.Name)</th>
+                <th>@nameof(Team.Description)</th>
+                <th colspan="2"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Teams != null)
+            {
+                foreach (var item in Model.Teams)
+                {
+                    string rowClass = Model.SelectedTeam?.TeamId == item.TeamId ? "SelectedRow" : string.Empty;
+
+                    <tr class="@rowClass">
+                        <td>@item.TeamId</td>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>
+                            <input type="submit"
+                                   value="Select Time"
+                                   asp-controller="@typeof(TeamController).GetControllerName()"
+                                   asp-action="@nameof(TeamController.Select)"
+                                   asp-route-teamId="@item.TeamId" />
+                        </td>
+                        <td>
+                            <input type="submit"
+                                   value="List Members"
+                                   asp-controller="@typeof(MemberController).GetControllerName()"
+                                   asp-action="@nameof(MemberController.List)"
+                                   asp-route-teamId="@item.TeamId" />
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</form>
+
+<br />
+<br />
+
+@if (Model.InputData == InputData.Teams)
+{
+    if (Model.SelectedTeam != null)
+    {
+        switch (Model.DisplayMode)
+        {
+            case DisplayMode.Read:
+                await Html.RenderPartialAsync("_DisplayTeam", Model.SelectedTeam);
+                break;
+
+            case DisplayMode.Update:
+                await Html.RenderPartialAsync("_UpdateTeam", Model.SelectedTeam);
+                break;
+        }
+    }
+    else if (Model.DisplayMode == DisplayMode.Insert)
+    {
+        await Html.RenderPartialAsync("_InsertTeam", new Team());
+    }
+}

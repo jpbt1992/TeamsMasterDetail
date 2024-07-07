@@ -1,0 +1,51 @@
+﻿@using TeamsMasterDetail.Domain.Entities;
+@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+
+@model Member
+
+<h2>Editar @nameof(Member) : @Model.Name</h2>
+
+<form method="post">
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>Time ID :</td>
+            <td>@Model.TeamId</td>
+        </tr>
+        <tr>
+            <td>Membro ID :</td>
+            <td>@Model.MemberId</td>
+        </tr>
+        <tr>
+            <td>Nome :</td>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <td>Email :</td>
+            <td>@Model.Email</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"
+                       value="Update"
+                       asp-controller="@typeof(MemberController).GetControllerName()"
+                       asp-action="@nameof(MemberController.UpdateEntry)"
+                       asp-route-teamId="@Model.TeamId"
+                       asp-route-memberId="@Model.MemberId" />
+
+                <input type="submit"
+                       value="Delete"
+                       asp-controller="@typeof(MemberController).GetControllerName()"
+                       asp-action="@nameof(MemberController.Delete)"
+                       asp-route-teamId="@Model.TeamId"
+                       asp-route-memberId="@Model.MemberId" />
+
+                <input type="submit"
+                       value="Cancel"
+                       asp-controller="@typeof(MemberController).GetControllerName()"
+                       asp-action="@nameof(MemberController.CancelSelection)"
+                       asp-route-teamId="@Model.TeamId" />
+            </td>
+        </tr>
+    </table>
+</form>

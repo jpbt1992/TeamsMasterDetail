@@ -1,0 +1,44 @@
+﻿@using TeamsMasterDetail.Domain.Entities;
+@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+
+@model Team
+
+<h2>Editar @nameof(Team) : @Model.Name</h2>
+
+<form method="post">
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>@nameof(Model) ID :</td>
+            <td>@Model.TeamId</td>
+        </tr>
+        <tr>
+            <td>@nameof(Model.Name) :</td>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <td>@nameof(Model.Description) :</td>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"
+                       value="Update"
+                       asp-controller="@typeof(TeamController).GetControllerName()"
+                       asp-action="@nameof(TeamController.UpdateEntry)"
+                       asp-route-teamId="@Model.TeamId" />
+
+                <input type="submit"
+                       value="@nameof(TeamController.Delete)"
+                       asp-controller="@typeof(TeamController).GetControllerName()"
+                       asp-action="@nameof(TeamController.Delete)"
+                       asp-route-teamId="@Model.TeamId" />
+
+                <input type="submit"
+                       value="Cancel"
+                       asp-controller="@typeof(TeamController).GetControllerName()"
+                       asp-action="CancelSelection" />
+            </td>
+        </tr>
+    </table>
+</form>

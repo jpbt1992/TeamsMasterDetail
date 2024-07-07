@@ -1,0 +1,47 @@
+﻿@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+
+@model TeamsMasterDetail.Domain.Entities.Team
+
+<h2>Editar Time : @Model.Name</h2>
+
+<form method="post">
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>@nameof(Model) ID :</td>
+            <td>
+                <input type="text"
+                       asp-for="TeamId" readonly />
+            </td>
+        </tr>
+        <tr>
+            <td>@nameof(Model.Name) :</td>
+            <td>
+                <input type="text"
+                       asp-for="Name" />
+            </td>
+        </tr>
+        <tr>
+            <td>@nameof(Model.Description) :</td>
+            <td>
+                <input type="text"
+                       asp-for="Description" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"
+                       value="Uodate"
+                       asp-controller="@typeof(TeamController).GetControllerName()"
+                       asp-action="UpdateSave"
+                       asp-route-timeId="@Model.TeamId" />
+
+                <input type="submit"
+                       value="Cancela"
+                       asp-controller="@typeof(TeamController).GetControllerName()"
+                       asp-action="@nameof(TeamController.CancelEntry)"
+                       asp-route-timeId="@Model.TeamId" />
+            </td>
+        </tr>
+    </table>
+</form>

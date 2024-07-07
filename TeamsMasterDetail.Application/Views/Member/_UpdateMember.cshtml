@@ -1,0 +1,49 @@
+﻿@using TeamsMasterDetail.Domain.Entities;
+@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+
+@model Member
+
+<h2>Edit @nameof(Member): @Model.Name</h2>
+
+<form method="post">
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>Time ID :</td>
+            <td>
+                <input type="text" asp-for="TeamId" readonly />
+            </td>
+        </tr>
+        <tr>
+            <td>Membro ID :</td>
+            <td>
+                <input type="text" asp-for="MemberId" readonly />
+            </td>
+        </tr>
+        <tr>
+            <td>Nome :</td>
+            <td><input type="text" asp-for="Name" /></td>
+        </tr>
+        <tr>
+            <td>Email :</td>
+            <td><input type="text" asp-for="Email" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit"
+                       value="Salva"
+                       asp-controller="@typeof(MemberController).GetControllerName()"
+                       asp-action="@nameof(MemberController.UpdateSave)"
+                       asp-route-teamId="@Model.TeamId"
+                       asp-route-memberId="@Model.MemberId" />
+
+                <input type="submit"
+                       value="Cancela"
+                       asp-controller="@typeof(MemberController).GetControllerName()"
+                       asp-action="@nameof(MemberController.CancelEntry)"
+                       asp-route-teamId="@Model.TeamId"
+                       asp-route-memberId="@Model.MemberId" />
+            </td>
+        </tr>
+    </table>
+</form>

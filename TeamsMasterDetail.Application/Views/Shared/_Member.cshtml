@@ -1,0 +1,79 @@
+﻿@using TeamsMasterDetail.Domain.Entities;
+@using TeamsMasterDetail.Application.Extensions;
+@using TeamsMasterDetail.Application.Controllers;
+@model MasterDetailViewModel
+
+@if (Model.InputData == InputData.Members)
+{
+    if (Model.SelectedTeam != null)
+    {
+        <h2>Members List : @Model.SelectedTeam.Name</h2>
+        <form method="post">
+            <input type="submit"
+                   value="Insert Member"
+                   asp-controller="@typeof(MemberController).GetControllerName()"
+                   asp-action="@nameof(MemberController.InsertEntry)"
+                   asp-route-teamId="@Model.SelectedTeam.TeamId" />
+
+            <br />
+            <br />
+
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>@nameof(Team)</th>
+                        <th>@nameof(Member)</th>
+                        <th>@nameof(Member.Name)</th>
+                        <th>@nameof(Member.Email)</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.SelectedTeam.Members != null)
+                    {
+                        foreach (var item in Model.SelectedTeam.Members)
+                        {
+                            string rowClass = (Model.SelectedMember != null) && (item.MemberId == Model.SelectedMember.MemberId)
+                            ? "SelectedRow" : string.Empty;
+
+                            <tr class="@rowClass">
+                                <td>@item.TeamId</td>
+                                <td>@item.MemberId</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    <input type="submit"
+                                           value="Select Member"
+                                           asp-controller="@typeof(MemberController).GetControllerName()"
+                                           asp-action="@nameof(MemberController.Select)"
+                                           asp-route-teamId="@item.TeamId"
+                                           asp-route-memberId="@item.MemberId" />
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </form>
+    }
+
+    if (Model.SelectedMember != null)
+    {
+        string? partialViewName = Model.DisplayMode switch
+        {
+            DisplayMode.Read => "_DisplayMember",
+            DisplayMode.Update => "_UpdateMember",
+            DisplayMode.Insert => "_InsertMember",
+            _ => null
+        };
+
+        if (partialViewName != null)
+        {
+            var model = (Model.DisplayMode == DisplayMode.Insert)
+                ? new Member() { TeamId = Model.SelectedTeam.TeamId }
+                : Model.SelectedMember;
+
+            await Html.RenderPartialAsync(partialViewName, model);
+        }
+    }
+}
