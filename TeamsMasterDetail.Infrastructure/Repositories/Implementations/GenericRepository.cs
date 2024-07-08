@@ -10,8 +10,6 @@ namespace TeamsMasterDetail.Infrastructure.Repositories.Implementations
         where TContext : DbContext
     {
         #region Private Variables
-        private readonly TContext context = context;
-
         private readonly DbSet<TEntity> dbSet = context.Set<TEntity>();
         #endregion
 

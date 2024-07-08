@@ -9,8 +9,6 @@ namespace TeamsMasterDetail.Infrastructure.Repositories.Implementations
         : IEntityRepository<TEntity> where TEntity : class
     {
         #region Private Methods
-        private readonly IUnitOfWorkRepository<AppDbContext> unitOfWorkRepository = unitOfWorkRepository;
-
         private readonly IGenericRepository<TEntity> entityRepository = unitOfWorkRepository.GetRepository<TEntity>();
         #endregion
 

@@ -10,8 +10,6 @@ namespace TeamsMasterDetail.Application.Controllers
 {
     public class MemberController(IMediator mediator) : Controller
     {
-        private readonly IMediator mediator = mediator;
-
         [HttpPost]
         public async Task<IActionResult> List(int teamId)
         {
