@@ -55,34 +55,40 @@ namespace TeamsMasterDetail.Infrastructure.Repositories.Implementations
         public IGenericRepository<TEntity> GetRepository<TEntity>()
             where TEntity : class
         {
-            if (repositories.ContainsKey(typeof(TEntity)))
+            if (repositories.TryGetValue(typeof(TEntity), out object? repository))
             {
-                return (IGenericRepository<TEntity>)repositories[typeof(TEntity)];
+                return (IGenericRepository<TEntity>)repository;
             }
 
-            GenericRepository<TEntity, TContext> repository = new(context);
+            GenericRepository<TEntity, TContext> newRepository = new(context);
 
-            repositories.Add(typeof(TEntity), repository);
+            repositories.TryAdd(typeof(TEntity), newRepository);
 
-            return repository;
+            return newRepository;
         }
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            IEnumerable<object> entites = context.ChangeTracker.Entries()
+            IEnumerable<object> entities = context.ChangeTracker.Entries()
                           .Where(where => where.State == EntityState.Added
                               || where.State == EntityState.Deleted
                               || where.State == EntityState.Modified)
                           .Select(select => select.Entity);
 
-            foreach (object entity in entites)
+            if (entities.Any())
             {
-                ValidationContext validationContext = new(entity);
+                await Task.Run(() =>
+                {
+                    entities.AsParallel().ForAll(entity =>
+                    {
+                        ValidationContext validationContext = new(entity);
+                        Validator.ValidateObject(entity, validationContext, true);
+                    });
 
-                Validator.ValidateObject(entity, validationContext, true);
+                }, cancellationToken);
             }
 
-            return context.SaveChangesAsync();
+            return await context.SaveChangesAsync(cancellationToken);
         }
         #endregion
 

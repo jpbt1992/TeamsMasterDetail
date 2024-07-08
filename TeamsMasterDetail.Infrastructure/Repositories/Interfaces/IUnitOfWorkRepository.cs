@@ -13,6 +13,6 @@ namespace TeamsMasterDetail.Infrastructure.Repositories.Interfaces
         IGenericRepository<TEntity> GetRepository<TEntity>()
             where TEntity : class;
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
